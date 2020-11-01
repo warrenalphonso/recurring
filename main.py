@@ -46,6 +46,6 @@ message["To"] = recipient
 with smtplib.SMTP_SSL("smtp.gmail.com", port, context=context) as server: 
     if password:
         server.login(sender, password)
-
-        server.sendmail(sender, sender, message.as_string())
-
+        server.sendmail(sender, recipient, message.as_string())
+    else: 
+        print("No password found!")
