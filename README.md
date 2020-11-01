@@ -9,6 +9,6 @@ config files, and I don't trust myself to not do something stupid which leaks
 the password. 
 
 The original intent is to send me the text of each post in the [original 
-LW sequences](https://www.lesswrong.com/tag/original-sequences), which I can 
-access via Markdown from [here](https://jb55.com/lesswrong/). 
-
+LW sequences](https://www.lesswrong.com/tag/original-sequences). I receive 
+daily emails of the posts in sequential order via a link to [this website](
+https://www.readthesequences.com/). 
