@@ -23,6 +23,9 @@ message = MIMEText(
     f"""\
         <a href="{url}">{title}</a>\
         <br />\
+        <a href="https://roamresearch.com/#/app/warrenalphonso">Think in Roam.</a>\
+        <br />\
+        <br />\
         <p>Sent by github.com/warrenalphonso/recurring via Heroku!</p>\
     """, "html")
 message["Subject"] = f"{title}"
