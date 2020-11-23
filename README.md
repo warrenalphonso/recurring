@@ -11,4 +11,5 @@ the password.
 The original intent is to send me the text of each post in the [original 
 LW sequences](https://www.lesswrong.com/tag/original-sequences). I receive 
 daily emails of the posts in sequential order via a link to [this website](
-https://www.readthesequences.com/). 
+https://www.readthesequences.com/). I'm also reading the [Mr. Money Mustache](
+https://www.mrmoneymustache.com/) with this. 
