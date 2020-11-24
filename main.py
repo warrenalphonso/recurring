@@ -41,7 +41,7 @@ with open("mmm.csv") as f:
 
 message_mmm = MIMEText(
     f"""\
-        <a href="{url_mmm}">{title_mmm}</a>"\
+        <a href="{url_mmm}">{title_mmm}</a>\
         <br />\
         <p>Sent by github.com/warrenalphonso/recurring via Heroku!</p>\
     """, "html")
