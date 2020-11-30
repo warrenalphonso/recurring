@@ -9,7 +9,6 @@ from email.mime.text import MIMEText
 
 # Choose post to email by counting days since starting 
 start_date_sequences = date(2020, 10, 31)
-start_date_mmm = date(2020, 11, 23)
 today_date = date.today()
 
 title_sequences = ""
@@ -31,23 +30,6 @@ message_sequences = MIMEText(
     """, "html")
 message_sequences["Subject"] = f"{title_sequences}"
 
-title_mmm = ""
-url_mmm = ""
-with open("mmm.csv") as f:
-    r = csv.reader(f)
-    for i, row in enumerate(r):
-        if i == (today_date - start_date_mmm).days:
-            title_mmm, url_mmm = row 
-
-message_mmm = MIMEText(
-    f"""\
-        <a href="{url_mmm}">{title_mmm}</a>\
-        <br />\
-        <p>Sent by github.com/warrenalphonso/recurring via Heroku!</p>\
-    """, "html")
-message_mmm["Subject"] = f"{title_mmm}"
-
-
 ##
 # SETUP SMTP CLIENT
 ##
@@ -62,13 +44,10 @@ recipient = "warrenalphonso02@gmail.com"
 
 message_sequences["From"] = sender
 message_sequences["To"] = recipient
-message_mmm["From"] = sender
-message_mmm["To"] = recipient
 
 with smtplib.SMTP_SSL("smtp.gmail.com", port, context=context) as server: 
     if password:
         server.login(sender, password)
         server.sendmail(sender, recipient, message_sequences.as_string())
-        server.sendmail(sender, recipient, message_mmm.as_string())
     else: 
         print("No password found!")
