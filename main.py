@@ -38,12 +38,22 @@ message_sequences["Subject"] = f"{title_sequences}"
 toggl = today_date.day == 1
 message_toggl = MIMEText(
     f"""\
-        <p>Download the Toggl Detailed Report for the past month in CSV format 
+        <p>Download the Toggl Detailed Report for the past month in CSV format \
         and see how it went. <b>Push the CSV to GitHub repo.</b></p>
         <br />\
         <p>Sent by github.com/warrenalphonso/recurring via Heroku!</p>\
     """, "html")
 message_toggl["Subject"] = "Time for Toggl Monthly Review"
+
+# GoodReads Annual Backup
+goodreads = today_date.month == 1 and today_date.day == 1
+message_goodreads = MIMEText(
+    f"""\
+        <p>Download my GoodReads data and save it somewhere.</p>\
+        <br />\
+        <p>Sent by github.com/warrenalphonso/recurring via Heroku!</p>\
+    """, "html")
+message_goodreads["Subject"] = "Download GoodReads Data"
 
 ##
 # SETUP SMTP CLIENT
@@ -57,14 +67,13 @@ sender = "warrenalphonso.recurring@gmail.com"
 password = os.environ.get("EMAIL_PASSWORD", None)
 recipient = "warrenalphonso02@gmail.com"
 
-message_sequences["From"] = sender
-message_sequences["To"] = recipient
-
 with smtplib.SMTP_SSL("smtp.gmail.com", port, context=context) as server:
     if password:
         server.login(sender, password)
         server.sendmail(sender, recipient, message_sequences.as_string())
         if toggl:
             server.sendmail(sender, recipient, message_toggl.as_string())
+        if goodreads:
+            server.sendmail(sender, recipient, message_goodreads.as_string())
     else:
         print("No password found!")
