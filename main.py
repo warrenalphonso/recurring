@@ -67,12 +67,12 @@ sender = "warrenalphonso.recurring@gmail.com"
 password = os.environ.get("EMAIL_PASSWORD", None)
 recipient = "warrenalphonso02@gmail.com"
 
-message_sequences["From"] = sender
-message_sequences["To"] = recipient
 
 with smtplib.SMTP_SSL("smtp.gmail.com", port, context=context) as server:
     if password:
         server.login(sender, password)
+        message_sequences["From"] = sender
+        message_sequences["To"] = recipient
         server.sendmail(sender, recipient, message_sequences.as_string())
         if toggl:
             message_toggl["From"] = sender
