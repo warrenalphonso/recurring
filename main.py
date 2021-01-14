@@ -67,13 +67,20 @@ sender = "warrenalphonso.recurring@gmail.com"
 password = os.environ.get("EMAIL_PASSWORD", None)
 recipient = "warrenalphonso02@gmail.com"
 
+message_sequences["From"] = sender
+message_sequences["To"] = recipient
+
 with smtplib.SMTP_SSL("smtp.gmail.com", port, context=context) as server:
     if password:
         server.login(sender, password)
         server.sendmail(sender, recipient, message_sequences.as_string())
         if toggl:
+            message_toggl["From"] = sender
+            message_toggl["To"] = recipient
             server.sendmail(sender, recipient, message_toggl.as_string())
         if goodreads:
+            message_goodreads["From"] = sender
+            message_goodreads["To"] = recipient
             server.sendmail(sender, recipient, message_goodreads.as_string())
     else:
         print("No password found!")
