@@ -24,7 +24,7 @@ with open("sequences.csv") as f:
             title_sequence, url_sequence = row
 if title_sequence:
     messages[f"{title_sequence}"] = \
-        f"""
+        f"""\
         <a href="{url_sequence}">{title_sequence}</a>\
         <br />\
         <a href="https://roamresearch.com/#/app/warrenalphonso">Think in Roam</a>\
@@ -33,20 +33,27 @@ if title_sequence:
         <p>Sent by github.com/warrenalphonso/recurring via Heroku!</p>\
         """
 
-# Toggl Montly Review
+# Toggl Montly Review and Anki Monthly Backup
 if today_date.day == 1:
     messages["Time for Toggl Monthly Review"] = \
-        """
+        """\
         <p>Download the Toggl Detailed Report for the past month in CSV format \
-        and see how it went. <b>Push the CSV to GitHub repo.</b></p>
+        and see how it went. <b>Push the CSV to GitHub repo.</b></p>\
         <br />\
         <p>Sent by github.com/warrenalphonso/recurring via Heroku!</p>\
         """
 
+    # AnkiWeb stores 30 backups by default but just in case...
+    messages["Backup Anki"] = \
+        """\
+        <p>Export Anki as a `.apkg` file and push to GitHub repo.</p>\
+        """
+
+
 # GoodReads Annual Backup
 if today_date.month == 1 and today_date.day == 1:
     messages["Download GoodReads Data"] = \
-        """
+        """\
         <p>Download my GoodReads data and save it somewhere.</p>\
         <br />\
         <p>Sent by github.com/warrenalphonso/recurring via Heroku!</p>\
