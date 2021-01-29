@@ -59,23 +59,6 @@ if today_date.month == 1 and today_date.day == 1:
         <p>Sent by github.com/warrenalphonso/recurring via Heroku!</p>\
         """
 
-# Webster's 1913 words
-start_date_websters = date(2021, 1, 21)
-word_websters = ""
-definition_websters = ""
-with open("words.csv", "r") as f:
-    r = csv.reader(f)
-    for i, row in enumerate(r):
-        if i == (today_date - start_date_websters).days:
-            word_websters, definition_websters = row
-if word_websters:
-    messages[f"Today's word: {word_websters}"] = \
-        f"""\
-        <p>{definition_websters}</p>\
-        <br />\
-        <p>Sent by github.com/warrenalphonso/recurring via Heroku!</p>\
-        """
-
 
 # Send
 try:
