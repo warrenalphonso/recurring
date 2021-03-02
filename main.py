@@ -46,7 +46,7 @@ if today_date.day == 1:
     # AnkiWeb stores 30 backups by default but just in case...
     messages["Backup Anki"] = \
         """\
-        <p>Export Anki as a `.apkg` file and push to GitHub repo.</p>\
+        <p>Export Anki as a `.colpkg` file and push to GitHub repo.</p>\
         """
 
 
