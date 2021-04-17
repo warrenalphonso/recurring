@@ -40,7 +40,7 @@ with open("schur.csv", "r") as f:
     r = csv.reader(f)
     for i, row in enumerate(r):
         if i == (today_date - start_date_schur).days:
-            title_schur = row
+            title_schur, = row
 if title_schur:
     messages[title_schur] = \
         f"""\
