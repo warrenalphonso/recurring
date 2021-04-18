@@ -46,7 +46,8 @@ if title_schur:
         f"""\
         <p>Look up <b>{title_schur}</b> today. Create as many Anki cards as \
         you can think of that will make you remember <i>when</i> to use this \
-        word.</p>\
+        word. Use <b><a href="https://www.websters1913.com/">Webster's 1913 \
+        Dictionary</a></b> to find more definitions.</p>\
         <br />\
         <br />\
         <p>Sent by github.com/warrenalphonso/recurring via Heroku!</p>\
