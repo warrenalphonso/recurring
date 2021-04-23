@@ -12,6 +12,22 @@ recipient = To("warrenalphonso02@gmail.com")
 messages = {}
 today_date = date.today()
 
+# Diary
+messages["Diary Email"] = \
+    """\
+    <p>Reply to this email to write an entry into your diary. Feel free to \
+    attach images or videos.</p>\
+    <br />\
+    <p>Some starters: \
+    <ul>\
+        <li>What's the coolest thing you did today?</li>\
+        <li>Who did you talk to today?</li>\
+        <li>What are you excited about tomorrow?</li>\
+    </ul>\
+    <br />\
+    <p>Sent by github.com/warrenalphonso/recurring via Heroku!</p>\
+    """
+
 # Sequences
 # Choose post to send by counting days since starting
 start_date_sequences = date(2020, 10, 31)
