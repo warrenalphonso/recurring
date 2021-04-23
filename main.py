@@ -1,121 +1,108 @@
+"""
+To send and receive emails, we need to authenticate ourselves with Gmail. The
+two libraries I'm using the send (Yagmail) and receive (imaplib) email allow
+for authentication via OAuth 2.0.
+
+Authenticating with OAuth 2.0 requires a Client ID, Client Secret, and Refresh
+Token. The former two can be found by going to Google Console and creating a
+new credential:
+    console.cloud.google.com/apis/credentials
+I store my Client ID and secret in 1Password, though losing them isn't a big
+deal because you can just create a new one.
+
+Yagmail expects a JSON file with keys for the user email address, as well as
+these three strings. We've also got to get this information to Heroku. I think
+it's a little tricky to remember not to commit a JSON file like that so I'll
+just use a `.env` file to store this information, and create a JSON file here,
+so that Yagmail can use it.
+"""
+import json
 import os
-import sendgrid
-from sendgrid.helpers.mail import *
-from datetime import date
-import csv
+from typing import TypedDict
+from urllib.parse import urlencode
+from urllib.request import urlopen
+
+OAUTH_FILE = "oauth2_creds.json"
 
 
-sender = From("warrenalphonso.recurring@gmail.com")
-recipient = To("warrenalphonso02@gmail.com")
+class Token(TypedDict):
+    access_token: str
+    token_type: str
+    expires_in: int
 
-# Setup messages to send
-messages = {}
-today_date = date.today()
 
-# Diary
-messages["Diary Email"] = \
-    """\
-    <p>Reply to this email to write an entry into your diary. Feel free to \
-    attach images or videos.</p>\
-    <br />\
-    <p>Some starters: \
-    <ul>\
-        <li>What's the coolest thing you did today?</li>\
-        <li>Who did you talk to today?</li>\
-        <li>What are you excited about tomorrow?</li>\
-    </ul>\
-    <br />\
-    <p>Sent by github.com/warrenalphonso/recurring via Heroku!</p>\
+def refresh_access_token(client_id, client_secret, refresh_token) -> Token:
+    """Generate a refreshed access token.
+
+    Inspired by:
+        https://github.com/kootenpv/yagmail/blob/f24af871c670c29f30c34ef2a4ab5abc3b17d005/yagmail/oauth2.py#L63
+    Background information:
+        https://developers.google.com/youtube/v3/live/guides/auth/server-side-web-apps#OAuth2_Refreshing_a_Token
     """
-
-# Sequences
-# Choose post to send by counting days since starting
-start_date_sequences = date(2020, 10, 31)
-title_sequence = ""
-url_sequence = ""
-with open("sequences.csv", "r") as f:
-    r = csv.reader(f)
-    for i, row in enumerate(r):
-        if i == (today_date - start_date_sequences).days:
-            title_sequence, url_sequence = row
-if title_sequence:
-    messages[title_sequence] = \
-        f"""\
-        <a href="{url_sequence}">{title_sequence}</a>\
-        <br />\
-        <a href="https://roamresearch.com/#/app/warrenalphonso">Think in Roam</a>\
-        <br />\
-        <br />\
-        <p>Sent by github.com/warrenalphonso/recurring via Heroku!</p>\
-        """
-
-# Schur's _1000 Most Important Words_
-start_date_schur = date(2021, 4, 16)
-title_schur = ""
-with open("schur.csv", "r") as f:
-    r = csv.reader(f)
-    for i, row in enumerate(r):
-        if i == (today_date - start_date_schur).days:
-            title_schur, = row
-if title_schur:
-    messages[title_schur] = \
-        f"""\
-        <p>Look up <b>{title_schur}</b> today. Create as many Anki cards as \
-        you can think of that will make you remember <i>when</i> to use this \
-        word. Use <b><a href="https://www.websters1913.com/">Webster's 1913 \
-        Dictionary</a></b> to find more definitions.</p>\
-        <br />\
-        <br />\
-        <p>Sent by github.com/warrenalphonso/recurring via Heroku!</p>\
-        """
-
-# Toggl Montly Review and Anki Monthly Backup
-if today_date.day == 1:
-    messages["Time for Toggl Monthly Review"] = \
-        """\
-        <p>Download the Toggl Detailed Report for the past month in CSV \
-        format and see how it went. <b>Push the CSV to GitHub repo.</b></p>\
-        <br />\
-        <p>Sent by github.com/warrenalphonso/recurring via Heroku!</p>\
-        """
-
-    # AnkiWeb stores 30 backups by default but just in case...
-    messages["Backup Anki"] = \
-        """\
-        <p>Export Anki as a `.colpkg` file and push to GitHub repo.</p>\
-        """
+    params = dict(client_id=client_id, client_secret=client_secret,
+                  refresh_token=refresh_token, grant_type="refresh_token")
+    encoded_params = urlencode(params).encode("utf-8")
+    response = urlopen("https://accounts.google.com/o/oauth2/token",
+                       encoded_params).read().decode("utf-8")
+    return json.loads(response)
 
 
-# GoodReads Annual Backup
-if today_date.month == 1 and today_date.day == 1:
-    messages["Download GoodReads Data"] = \
-        """\
-        <p>Download my GoodReads data and save it somewhere.</p>\
-        <br />\
-        <p>Sent by github.com/warrenalphonso/recurring via Heroku!</p>\
-        """
+def source_env(path=".env"):
+    """Source .env: https://stackoverflow.com/a/63484975/13697995"""
+    with open(".env", "r") as f:
+        for line in f.read().split("\n"):
+            try:
+                key, value = line.split('=')
+                os.environ[key] = value
+            except ValueError:
+                pass
 
 
-# Send
-try:
-    key = os.environ.get("SENDGRID_API_KEY", None)
-    if key is None:
+if __name__ == "__main__":
+    try:
+        source_env()
+
+        # Variables Yagmail needs
+        sender = os.environ["SENDER"]
+        client_id = os.environ["CLIENT_ID"]
+        client_secret = os.environ["CLIENT_SECRET"]
+        refresh_token = os.environ["REFRESH_TOKEN"]
+        # Make sure other environment variables exist
+        os.environ["RECEIVER"]
+
+        # Set access token so imaplib can use it
+        access_token = refresh_access_token(
+            client_id, client_secret, refresh_token)["access_token"]
+
+        # Delete last line if it was already defined
+        if os.environ.get("ACCESS_TOKEN", None):
+            with open(".env", "r") as f:
+                lines = f.readlines()
+            with open(".env", "w") as f:
+                for line in lines[:-1]:
+                    f.write(line)
+
+        # Append to .env
+        with open(".env", "a") as f:
+            f.write(f"ACCESS_TOKEN={access_token}")
+
+        os.environ["ACCESS_TOKEN"] = access_token
+
+    # https://stackoverflow.com/a/15032444/13697995
+    except (OSError, IOError):
+        raise Exception("Make sure a `.env` file exists.")
+
+    except KeyError:
         raise Exception(
-            "If running locally, source .env file. If on Heroku, set"
-            " environment variables."
+            "Make sure all environment variables are set in `.env`. See"
+            " `example.env` for which keys are necessary."
         )
-    sg = sendgrid.SendGridAPIClient(key)
-    for subject, html_content in messages.items():
-        message = Mail(
-            from_email=sender,
-            to_emails=recipient,
-            subject=Subject(subject),
-            html_content=HtmlContent(html_content)
-        )
-        response = sg.send(message=message)
-        if response.status_code != 202:
-            raise Exception(
-                "Response status code wasn't 202. It was: ",
-                response.status_code)
-except Exception as e:
-    print(e)
+
+    # Store in JSON file so Yagmail can access
+    with open(OAUTH_FILE, "w") as f:
+        json.dump(
+            dict(email_address=sender,
+                 google_client_id=client_id,
+                 google_client_secret=client_secret,
+                 google_refresh_token=refresh_token
+                 ), f)
