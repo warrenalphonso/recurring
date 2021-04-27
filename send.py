@@ -24,6 +24,7 @@ import csv
 from datetime import date
 import json
 import os
+import textwrap
 
 from dotenv import load_dotenv
 import yagmail
@@ -71,18 +72,18 @@ if __name__ == "__main__":
 
     # Diary
     yag.send(to=receiver, subject=f"Diary: {today.strftime('%b %d, %Y')}",
-             contents=(
-                 "Reply to this email to write an entry into your diary. Feel "
-                 "free to attach images or videos.\n"
-                 "\n"
-                 "Some starters:"
-                 "\n"
-                 "- What's the coolest thing you did today?\n"
-                 "- Who did you talk to today?\n"
-                 "- What are you excited about tomorrow?\n"
-                 "\n"
-                 "Sent by warrenalphonso/recurring via Heroku!"
-             ))
+             contents=textwrap.dedent(
+                 """\
+                 Reply to this email to write an entry into your diary. Feel \
+                 free to attach images or videos.\
+
+                 Some starters:
+                 - What's the coolest thing you did today?
+                 - Who did you talk to today?
+                 - What are you excited about tomorrow?
+
+                 Sent by warrenalphonso/recurring via Heroku!\
+                 """))
 
     # Sequences
     # Choose post to send by counting days since starting
@@ -95,20 +96,22 @@ if __name__ == "__main__":
                 title_sequence, url_sequence = row
     if title_sequence:
         yag.send(to=receiver, subject=title_sequence,
-                 contents=(
-                     f"<a href='{url_sequence}''>{title_sequence}</a>\n"
-                     "\n"
-                     "<a href='https://roamresearch.com/#/app/warrenalphonso'>"
-                     "Think in Roam</a>\n"
-                     "\n"
-                     "Sent by warrenalphonso/recurring via Heroku!"
-                 ))
+                 contents=textwrap.dedent(
+                     f"""\
+                     <a href='{url_sequence}''>{title_sequence}</a>\
+
+                     <a href='https://roamresearch.com/#/app/warrenalphonso'>\
+                     Think in Roam</a>\
+
+                     Sent by warrenalphonso/recurring via Heroku!\
+                     """))
     else:
         yag.send(to=receiver, subject="Finished Sequences!",
-                 contents=(
-                     "Congrats! You've finished reading The Sequences.\n"
-                     "Remove it from `send.py` in `warrenalphonso/recurring`."
-                 ))
+                 contents=textwrap.dedent(
+                     """\
+                     Congrats! You've finished reading The Sequences. \
+                     Remove it from `send.py` in `warrenalphonso/recurring`.\
+                     """))
 
     # Schur's _1000 Most Important Words_
     start_date_schur = date(2021, 4, 16)
@@ -120,33 +123,37 @@ if __name__ == "__main__":
                 title_schur, = row
     if title_schur:
         yag.send(to=receiver, subject=title_schur,
-                 contents=(
-                     f"Look up <b>{title_schur}</b> today. Create as many "
-                     "Anki cards as you can think of that will make you "
-                     "remember <i>when</i> to use this word. Use <b>"
-                     "<a href='https://www.websters1913.com/'>Webster's 1913 "
-                     "Dictionary</a></b>\n"
-                     "\n"
-                     "Sent by warrenalphonso/recurring via Heroku!"
-                 ))
+                 contents=textwrap.dedent(
+                     f"""\
+                     Look up <b>{title_schur}</b> today. Create as many \
+                     Anki cards as you can think of that will make you \
+                     remember <i>when</i> to use this word. Use <b>\
+                     <a href='https://www.websters1913.com/'>Webster's 1913 \
+                     Dictionary</a></b>\
+
+                     Sent by warrenalphonso/recurring via Heroku!\
+                     """))
     else:
         yag.send(to=receiver, subject="Finsihed Schur!",
-                 contents=(
-                     "Congrats! You've finished reading Norman Schur's "
-                     "<i>1000 Most Important Words</i>.\n"
-                     "Remove it from `send.py` in `warrenalphonso/recurring`."
-                 ))
+                 contents=textwrap.dedent(
+                     """\
+                     Congrats! You've finished reading Norman Schur's \
+                     <i>1000 Most Important Words</i>.\
+
+                     Remove it from `send.py` in `warrenalphonso/recurring`.\
+                     """))
 
     # Toggl Montly Review and Anki Monthly Backup
     if today.day == 1:
         yag.send(to=receiver, subject="Time for Toggl Monthly Review",
-                 contents=(
-                     "Download the Toggl Detailed Report for the past month "
-                     "in CSV format and see how it went. <b>Push the CSV to "
-                     "GitHub repo.</b>\n"
-                     "\n"
-                     "Sent by warrenalphonso/recurring via Heroku!"
-                 ))
+                 contents=textwrap.dedent(
+                     """\
+                     Download the Toggl Detailed Report for the past month \
+                     in CSV format and see how it went. <b>Push the CSV to \
+                     GitHub repo.</b>\
+
+                     Sent by warrenalphonso/recurring via Heroku!\
+                     """))
 
         # AnkiWeb stores 30 backups by default but just in case...
         yag.send(to=receiver, subject="Backup Anki",
@@ -157,8 +164,9 @@ if __name__ == "__main__":
     # GoodReads Annual Backup
     if today.month == 1 and today.day == 1:
         yag.send(to=receiver, subject="Download GoodReads Data",
-                 contents=(
-                     "Download my GoodReads data and save it somewhere.\n"
-                     "\n"
-                     "Sent by warrenalphonso/recurring via Heroku!"
-                 ))
+                 contents=textwrap.dedent(
+                     """\
+                     Download my GoodReads data and save it somewhere.\
+
+                     Sent by warrenalphonso/recurring via Heroku!\
+                     """))
