@@ -114,34 +114,34 @@ if __name__ == "__main__":
                      """))
 
     # Schur's _1000 Most Important Words_
-    start_date_schur = date(2021, 4, 16)
-    title_schur = ""
-    with open("content/schur.csv", "r") as f:
-        r = csv.reader(f)
-        for i, row in enumerate(r):
-            if i == (today - start_date_schur).days:
-                title_schur, = row
-    if title_schur:
-        yag.send(to=receiver, subject=title_schur,
-                 contents=textwrap.dedent(
-                     f"""\
-                     Look up <b>{title_schur}</b> today. Create as many \
-                     Anki cards as you can think of that will make you \
-                     remember <i>when</i> to use this word. Use <b>\
-                     <a href='https://www.websters1913.com/'>Webster's 1913 \
-                     Dictionary</a></b>\
+    # start_date_schur = date(2021, 4, 16)
+    # title_schur = ""
+    # with open("content/schur.csv", "r") as f:
+    #     r = csv.reader(f)
+    #     for i, row in enumerate(r):
+    #         if i == (today - start_date_schur).days:
+    #             title_schur, = row
+    # if title_schur:
+    #     yag.send(to=receiver, subject=title_schur,
+    #              contents=textwrap.dedent(
+    #                  f"""\
+    #                  Look up <b>{title_schur}</b> today. Create as many \
+    #                  Anki cards as you can think of that will make you \
+    #                  remember <i>when</i> to use this word. Use <b>\
+    #                  <a href='https://www.websters1913.com/'>Webster's 1913 \
+    #                  Dictionary</a></b>\
 
-                     Sent by warrenalphonso/recurring via Heroku!\
-                     """))
-    else:
-        yag.send(to=receiver, subject="Finsihed Schur!",
-                 contents=textwrap.dedent(
-                     """\
-                     Congrats! You've finished reading Norman Schur's \
-                     <i>1000 Most Important Words</i>.\
+    #                  Sent by warrenalphonso/recurring via Heroku!\
+    #                  """))
+    # else:
+    #     yag.send(to=receiver, subject="Finsihed Schur!",
+    #              contents=textwrap.dedent(
+    #                  """\
+    #                  Congrats! You've finished reading Norman Schur's \
+    #                  <i>1000 Most Important Words</i>.\
 
-                     Remove it from `send.py` in `warrenalphonso/recurring`.\
-                     """))
+    #                  Remove it from `send.py` in `warrenalphonso/recurring`.\
+    #                  """))
 
     # Toggl Montly Review and Anki Monthly Backup
     if today.day == 1:
