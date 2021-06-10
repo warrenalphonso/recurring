@@ -71,19 +71,19 @@ if __name__ == "__main__":
                        oauth2_file=OAUTH_FILE)
 
     # Diary
-    yag.send(to=receiver, subject=f"Diary: {today.strftime('%b %d, %Y')}",
-             contents=textwrap.dedent(
-                 """\
-                 Reply to this email to write an entry into your diary. Feel \
-                 free to attach images or videos.\
+    # yag.send(to=receiver, subject=f"Diary: {today.strftime('%b %d, %Y')}",
+    #          contents=textwrap.dedent(
+    #              """\
+    #              Reply to this email to write an entry into your diary. Feel \
+    #              free to attach images or videos.\
 
-                 Some starters:
-                 - What's the coolest thing you did today?
-                 - Who did you talk to today?
-                 - What are you excited about tomorrow?
+    #              Some starters:
+    #              - What's the coolest thing you did today?
+    #              - Who did you talk to today?
+    #              - What are you excited about tomorrow?
 
-                 Sent by warrenalphonso/recurring via Heroku!\
-                 """))
+    #              Sent by warrenalphonso/recurring via Heroku!\
+    #              """))
 
     # Sequences
     # Choose post to send by counting days since starting
